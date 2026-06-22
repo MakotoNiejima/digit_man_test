@@ -11,7 +11,25 @@ class Command:
 		clz = COMMAND_NAME_TO_CLASS[data["command"]]
 		return clz(**data)
 
+@dataclass
+class StartFlowCommand(Command):
+	flow: str
 
+@dataclass
+class SetSlotsCommand(Command):
+	slot: dict[str, Any]
 
+@dataclass
+class CancelFlowCommand(Command):
+	pass
 
-COMMAND_NAME_TO_CLASS = {}
+@dataclass
+class ResumeFlowCommand(Command):
+	flow: str
+
+COMMAND_NAME_TO_CLASS = {
+	"start": StartFlowCommand,
+	"set_slots": SetSlotsCommand,
+	"cancel": CancelFlowCommand,
+	"resume": ResumeFlowCommand
+}
