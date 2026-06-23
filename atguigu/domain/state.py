@@ -6,10 +6,8 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Any
 
-
 from atguigu.domain.contexts import TaskContext, SystemContext
 from atguigu.domain.messages import BotMessage, UserMessage
-
 
 @dataclass(slots=True)
 class FocusedObject :
@@ -35,7 +33,6 @@ class FocusedObject :
 			attributes=data['attributes']
 		)
 
-
 @dataclass(slots=True)
 class Turn :
 	turn_id: str  # uuid
@@ -56,7 +53,6 @@ class Turn :
 			user_message=UserMessage.from_dict(data['user_message']),
 			bot_massages=[BotMessage.from_dict(bot_massage_dict) for bot_massage_dict in data.get("bot_massages")]
 		)
-
 
 @dataclass(slots=True)
 class Session :
@@ -84,7 +80,6 @@ class Session :
 			closed_at=data['closed_at'],
 			turns=[Turn.from_dict(turn_dict) for turn_dict in data.get('turns', [])]
 		)
-
 
 @dataclass
 class DialogueState :
@@ -157,7 +152,7 @@ class DialogueState :
 		self.active_system_task = None
 		self.active_task = None
 
-	def interrupted_activating_task(self) :
+	def interrupt_activating_task(self) :
 		"""只负责中断，也就是开启下一个任务时用，故系统流程会跳到中断"""
 		self.paused_tasks.append(self.active_task)
 		self.active_task = None

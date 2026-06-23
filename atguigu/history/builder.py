@@ -37,7 +37,7 @@ class ChatHistoryBuilder:
 	@classmethod
 	def _render_obj_msg(cls, object: FocusedObject) :
 		label = "订单" if object.type == "order" else "商品"
-		id= object.id
+		id = object.id
 		title= object.title
 		attributes_str = ' '.join([f"{k}={v}" for k, v in object.attributes.items()])
 		return f'[id={id},label={label},title={title},attributes={attributes_str}]'

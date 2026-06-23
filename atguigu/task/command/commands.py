@@ -7,7 +7,7 @@ class Command:
 	command: str
 
 	@classmethod
-	def from_json(cls, data: dict[str, Any])->"Command":
+	def from_dict(cls, data: dict[str, Any])->"Command":
 		clz = COMMAND_NAME_TO_CLASS[data["command"]]
 		return clz(**data)
 
