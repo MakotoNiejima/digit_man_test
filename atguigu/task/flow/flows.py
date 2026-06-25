@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List
 
-from atguigu.task.flow.steps import FlowStep
+from atguigu.task.flow.steps import FlowStep, StartFlowStep
 
 
 @dataclass(slots=True)
@@ -13,11 +13,18 @@ class FlowSlot:
 
 @dataclass(slots=True)
 class Flow:
+	#把两个流放在了一起
 	flow_id: str
 	flow_name: str
 	description: str
 	steps: List[FlowStep] = field(default_factory=list)
 	slots: dict[str, FlowSlot] = field(default_factory=dict)
+
+	def get_start_step(self)-> StartFlowStep | None:
+		for step in self.steps:
+			if isinstance(step,StartFlowStep):
+				return step
+		return None
 
 class UserFlow:
 	pass
