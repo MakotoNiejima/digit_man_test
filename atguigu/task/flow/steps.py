@@ -12,7 +12,7 @@ class ResponseDefinition:
 	prompt: str = None
 
 @dataclass(slots=True)
-class SoltValidata:
+class SoltValidation:
 	condition: str | None = None
 	failure_response: ResponseDefinition | None = None
 
@@ -88,7 +88,7 @@ class ActionFlowStep(FlowStep) :
 class CollectFlowStep(FlowStep) :
 	slot_name: str = ""
 	response: ResponseDefinition = field(default_factory=ResponseDefinition)
-	validata: SoltValidata | None = None
+	validate: SoltValidation | None = None
 
 	@classmethod
 	def from_dict(cls, step_data: dict[str, Any])-> "CollectFlowStep":
@@ -100,14 +100,14 @@ class CollectFlowStep(FlowStep) :
 				mode=step_data["response"].get("mode"),
 				prompt=step_data["response"].get("prompt")
 			),
-			validata=SoltValidata(
-				condition=step_data["validata"]["condition"],
+			validate=SoltValidation(
+				condition=step_data["validate"]["condition"],
 				failure_response=ResponseDefinition(
-					text=step_data["validata"]["failure_response"]["text"],
-					mode=step_data["validata"].get("failure_response").get("mode"),
-					prompt=step_data["validata"]['failure_response'].get("prompt")
-				)if step_data["validata"].get("failure_response") else None
-			)if step_data.get('validata') else None
+					text=step_data["validate"]["failure_response"]["text"],
+					mode=step_data["validate"].get("failure_response").get("mode"),
+					prompt=step_data["validate"]['failure_response'].get("prompt")
+				)if step_data["validate"].get("failure_response") else None
+			)if step_data.get('validate') else None
 		)
 
 @dataclass(slots=True)

@@ -7,7 +7,7 @@ from atguigu.task.flow.flows import FlowsList
 class TaskHandler:
 	def __init__(self,
 	             command_process:CommandProcessor,
-	             flows:FlowsList,
+	             flow_list:FlowsList,
 	             flow_executor:FlowExecutor,
 	             action_runner:ActionRunner
 	             ):

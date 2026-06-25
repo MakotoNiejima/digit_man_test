@@ -17,7 +17,7 @@ class StartFlowCommand(Command):
 
 @dataclass
 class SetSlotsCommand(Command):
-	slot: dict[str, Any]
+	slots: dict[str, Any]
 
 @dataclass
 class CancelFlowCommand(Command):

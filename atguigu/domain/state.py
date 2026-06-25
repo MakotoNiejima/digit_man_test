@@ -58,7 +58,7 @@ class Turn :
 class Session :
 	session_id: str
 	started_at: float
-	last_activity_at: float  # 用于判断超时的时间戳
+	last_activity_time: float  # 用于判断超时的时间戳
 	closed_at: float | None = None
 	turns: list[Turn] = field(default_factory=list)
 
@@ -66,7 +66,7 @@ class Session :
 		return {
 			'session_id' : self.session_id,
 			'started_at' : self.started_at,
-			'last_activity_at' : self.last_activity_at,
+			'last_activity_time' : self.last_activity_time,
 			'closed_at' : self.closed_at,
 			'turns' : [turn.to_dict() for turn in self.turns]
 		}
@@ -76,7 +76,7 @@ class Session :
 		return cls(
 			session_id=data['session_id'],
 			started_at=data['started_at'],
-			last_activity_at=data['last_activity_at'],
+			last_activity_time=data['last_activity_time'],
 			closed_at=data['closed_at'],
 			turns=[Turn.from_dict(turn_dict) for turn_dict in data.get('turns', [])]
 		)
@@ -206,7 +206,7 @@ class DialogueState :
 
 	def start_session(self):
 		now = time.time()
-		session = Session(session_id=str(uuid.uuid4()),started_at=now,last_activity_at=now)
+		session = Session(session_id=str(uuid.uuid4()), started_at=now, last_activity_time=now)
 		self.current_session_id = session.session_id
 		self.sessions.append(session)
 

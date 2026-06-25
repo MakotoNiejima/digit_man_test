@@ -23,12 +23,10 @@ class ChatHistoryBuilder:
 		return "\n".join(chat_messages)
 
 	@classmethod
-	def _process_user_message(cls, user_message: UserMessage)->str :
+	def process_user_message(cls, user_message: UserMessage)->str :
 		if user_message.type is MessageType.TEXT:
 			return ChatHistoryBuilder._render_text_msg(user_message.text)
 		return ChatHistoryBuilder._render_obj_msg(user_message.object)
-
-
 
 	@classmethod
 	def _render_text_msg(cls, text:str)->str :

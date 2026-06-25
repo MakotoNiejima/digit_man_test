@@ -5,6 +5,7 @@ from typing import Any
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import load_prompt, PromptTemplate
 
+from atguigu.domain.messages import UserMessage
 from atguigu.domain.state import DialogueState
 from atguigu.history.builder import ChatHistoryBuilder
 from atguigu.infrastructure.llm_client import llm_client
@@ -15,15 +16,18 @@ from atguigu.task.flow.flows import FlowsList, Flow
 
 class TurnPlanner :
 	# 操作大模型
-	async def predict(self, state: DialogueState,
+	async def predict(self,
+	                  user_message: UserMessage,
+	                  *
+	                  state: DialogueState,
 	                  flow_list: FlowsList,  # 系统支持的所有流程
 	                  knowledge_intents: dict[str, KnowledgeIntent]  # 系统支持的所有意图
 	                  ) -> TurnPlan :
-		prompt_inputs = self._build_prompt_inputs(state, flow_list, knowledge_intents)
+		prompt_inputs = self._build_prompt_inputs(user_message,state=state, flow_list=flow_list, knowledge_intents=knowledge_intents)
 		return await self._predict_from_prompt_inputs(prompt_inputs)
 
-	def _build_prompt_inputs(self, state, flow_list, knowledge_intents) -> dict[str, Any] :
-		user_massage = ChatHistoryBuilder._render_text_msg(state.pending_turn.user_message)
+	def _build_prompt_inputs(self,user_message, state, flow_list, knowledge_intents) -> dict[str, Any] :
+		user_massage = ChatHistoryBuilder.process_user_message(user_message)
 		current_conversation = ChatHistoryBuilder.build(state.current_session().turns[-10 :])
 		active_task = json.dumps(state.active_task.to_dict(), ensure_ascii=False) if state.active_task else None
 		focused_object_json = json.dumps(state.focused_object.to_dict(),
