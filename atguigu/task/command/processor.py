@@ -110,10 +110,20 @@ class CommandProcessor:
                     started_flow_id=start_flow_id,
                     started_flow_name=start_business_flow.flow_name
             ))
+    
+    def _hand_cancel_flow(self,
+                       command,
+                       state: DialogueState
+                       ):
+        if state.current_activating_task:
+            state.end_activating_task
 
-
-
-
-
+    def _hand_resume_flow(self,
+                          command,
+                          state):
         pass
-
+    
+    def _hand_set_slots_flow(self,
+                             command,
+                             state):
+        pass

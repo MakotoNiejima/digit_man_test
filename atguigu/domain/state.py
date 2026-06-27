@@ -60,8 +60,6 @@ class Session :
 	started_at: float
 	last_activity_time: float  # 用于判断超时的时间戳
 	closed_at: float | None = None
-	turns: list[Turn] = field(default_factory=list)
-
 	def to_dict(self) -> dict[str, Any] :
 		return {
 			'session_id' : self.session_id,
