@@ -1,12 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy import text
-from sqlalchemy.orm import sessionmaker
 
 from atguigu.config.settings import settings
 
 engine: AsyncSession | None = None
 session_factory :async_sessionmaker[AsyncSession] | None = None
-
 
 async def init_db_engine():
     global engine, session_factory

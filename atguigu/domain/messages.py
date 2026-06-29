@@ -1,6 +1,6 @@
 from enum import Enum
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel
 
@@ -87,3 +87,11 @@ class ProcessResult(BaseModel):
 	sender_id: str
 	message_id: str
 	messages: list[BotMessage]
+
+
+@dataclass(slots=True)
+class ChatHistoryMessage:
+	session_id: str
+	role: Literal["user","bot"]
+	text: str | None = None
+	object: FocusedObject | None = None

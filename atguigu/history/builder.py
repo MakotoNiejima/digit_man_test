@@ -1,6 +1,8 @@
+from typing import Literal
+
 from attr import attributes
 
-from atguigu.domain.messages import UserMessage, MessageType
+from atguigu.domain.messages import UserMessage, MessageType, ChatHistoryMessage
 from atguigu.domain.state import Turn, FocusedObject
 
 
@@ -29,19 +31,34 @@ class ChatHistoryBuilder:
 		return ChatHistoryBuilder._render_obj_msg(user_message.object)
 
 	@classmethod
+	def _process_bot_message(cls, bot_message) :
+		if bot_message.text:
+			return ChatHistoryBuilder._render_text_msg(bot_message.text)
+		return ChatHistoryBuilder._render_obj_msg(bot_message.object)
+
+	@classmethod
 	def _render_text_msg(cls, text:str)->str :
 		return text.strip()
 
 	@classmethod
-	def _render_obj_msg(cls, object: FocusedObject) :
-		label = "订单" if object.type == "order" else "商品"
-		id = object.id
-		title= object.title
-		attributes_str = ' '.join([f"{k}={v}" for k, v in object.attributes.items()])
-		return f'[id={id},label={label},title={title},attributes={attributes_str}]'
+	def _render_obj_msg(cls, obj: FocusedObject) ->str :
+		label = "订单" if obj.type == "order" else "商品"
+		obj_id = obj.id
+		title= obj.title
+		attributes_str = ' '.join([f"{k}={v}" for k, v in obj.attributes.items()])
+		return f'[id={obj_id},label={label},title={title},attributes={attributes_str}]'
 
-	@classmethod
-	def _process_bot_message(cls, bot_message) :
-		if bot_message.text:
-			return ChatHistoryBuilder._render_text_msg(bot_message.text)
-		pass
+
+	@staticmethod
+	def built_chat_history(
+			session_id:str,
+			role:Literal["user","bot"],
+			text:str | None = None,
+			obj:FocusedObject | None = None,
+	) -> ChatHistoryMessage:
+		return ChatHistoryMessage(
+			session_id=session_id,
+			role=role,
+			text=text,
+			object=obj
+		)

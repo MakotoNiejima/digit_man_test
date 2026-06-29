@@ -29,8 +29,17 @@ class Settings(BaseSettings) :
 	database_url: str
 	app_host: str
 	app_port: int
-	model_config = SettingsConfigDict(env_file=ENV_FILE, env_file_encoding="utf-8", extra="ignore")
+	# model_config = SettingsConfigDict(env_file=ENV_FILE, env_file_encoding="utf-8", extra="ignore")
 
+	#万相数字人（灵眸）云渲染，说话全都有灵眸完成，TTS PCM等
+	avatar_access_key_id: str = ""
+	avatar_access_key_secret: str = ""
+	avatar_endpoint: str = "lingmou.cn-beijing.aliyuncs.com"
+	avatar_project_id: str = ""
+	avatar_instance_id: str = ""
+
+
+	model_config = SettingsConfigDict(env_file=ENV_FILE, env_file_encoding="utf-8", extra="ignore")  # extra="ignore"
 
 settings = Settings()  # type:ignore
 

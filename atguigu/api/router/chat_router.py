@@ -3,10 +3,9 @@ import uuid
 from fastapi import APIRouter, Depends
 
 from atguigu.api.dependency import DialogueServiceDep
-from atguigu.api.schema import ChatRequest, ChatResponse, ChatBotMessage, ChatObject
-from atguigu.domain.messages import ProcessResult, UserMessage, MessageType
+from atguigu.api.schema import ChatRequest, ChatResponse, ChatBotMessage, ChatObject, ChatMessageResponse
+from atguigu.domain.messages import ProcessResult, UserMessage, MessageType, ChatHistoryMessage
 from atguigu.domain.state import FocusedObject
-from atguigu.services.dialogue_service import DialogueService
 
 router = APIRouter()
 
@@ -18,9 +17,17 @@ async def hello():
 async def chat_endpoint(chat_request: ChatRequest,
                         dialogue_service: DialogueServiceDep,
                         )->ChatResponse:
+
+	#1.接口数据模型转领域数据模型
 	user_message = _build_user_message(chat_request)
+
+	#2.注入service
 	process_result: ProcessResult = await dialogue_service.hand_dialogue(user_message)
-	return _build_chat_message(process_result)
+
+	#3领域转接口数据模型
+	chat_response = _build_chat_message(process_result)
+
+	return chat_response
 
 def _build_user_message(chat_request: ChatRequest) -> UserMessage:
 	return UserMessage(
@@ -52,3 +59,8 @@ def _build_chat_message(process_result: ProcessResult)->ChatResponse:
 			)for bot_message in process_result.messages
 		]
 	)
+
+@router.get("/api/chat/history",response_model=ChatMessageResponse)
+async def chat_history_endpoint(sender_id: str, service: DialogueServiceDep) -> ChatMessageResponse:
+	chat_message_response:list[ChatHistoryMessage] = await service.load_chat_history(sender_id)
+	return ChatMessageResponse(sender_id=sender_id,messages=chat_message_response)
